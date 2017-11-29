@@ -46,39 +46,39 @@ router.get('/hello/:name', async (ctx, next) => {
 
 router.get('/', async (ctx, next) => {
   // ***************************************************************
-  var data = {  
-    signature: 123, 
-    echostr: 'Abcd1234', 
-    timestamp: new Date().getTime()
-  };//这是需要提交的数据  
-  var content = qs.stringify(data);  
-  var options = {  
-    hostname: 'asiaxxli.free.ngrok.cc', 
-    path: '/my/open?' + content,  
-    method: 'POST',
-    headers: {  
-      'Content-Type': 'application/json; charset=UTF-8'  
-    }   
-  };  
+  // var data = {  
+  //   signature: 123, 
+  //   echostr: 'Abcd1234', 
+  //   timestamp: new Date().getTime()
+  // };//这是需要提交的数据  
+  // var content = qs.stringify(data);  
+  // var options = {  
+  //   hostname: 'asiaxxli.free.ngrok.cc', 
+  //   path: '/my/open?' + content,  
+  //   method: 'POST',
+  //   headers: {  
+  //     'Content-Type': 'application/json; charset=UTF-8'  
+  //   }   
+  // };  
 
-  function requestMothed (options) {
-    var req = http.request(options, function (res) {  
-      console.log('STATUS: ' + res.statusCode);  
-      console.log('HEADERS: ' + JSON.stringify(res.headers));  
-      res.setEncoding('utf8');  
-      var callback = (chunk) => chunk;
-      res.on('data', function (chunk) {  
-        console.log('BODY: ' + chunk)
-      });  
-    });  
+  // function requestMothed (options) {
+  //   var req = http.request(options, function (res) {  
+  //     console.log('STATUS: ' + res.statusCode);  
+  //     console.log('HEADERS: ' + JSON.stringify(res.headers));  
+  //     res.setEncoding('utf8');  
+  //     var callback = (chunk) => chunk;
+  //     res.on('data', function (chunk) {  
+  //       console.log('BODY: ' + chunk)
+  //     });  
+  //   });  
   
-    req.on('error', function (e) {  
-      console.log('problem with request: ' + e.message);  
-    });  
+  //   req.on('error', function (e) {  
+  //     console.log('problem with request: ' + e.message);  
+  //   });  
   
-    req.end(); 
-  }
-  requestMothed(options)
+  //   req.end(); 
+  // }
+  // requestMothed(options)
   //************************************************************ */
   await ctx.render('aa')
 })
