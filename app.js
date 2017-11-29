@@ -5,10 +5,12 @@ const bodyParser = require('koa-bodyparser')
 const koaStatic  = require('koa-static') 
 const path = require('path')
 const views  = require('koa-views')
-const log4js = require('log4js')
 const crypto = require('crypto')
 const json = require('koa-json')
 const onerror = require('koa-onerror')
+const http = require('http')
+const qs = require('querystring')
+const logger = require('./log')
 
 onerror(app)
 app.use(json())
@@ -16,16 +18,10 @@ app.use(bodyParser({
   enableTypes:['json', 'form', 'text']
 }))
 
+logger.warn('starting')
 
-log4js.configure({
-  appenders: { cheese: { type: 'file', filename: 'cheese.log' } },
-  categories: { default: { appenders: ['cheese'], level: 'error' } }
-})
-const logger = log4js.getLogger('cheese')
-logger.error('Entering cheese testing')
-
-app.use(views(path.resolve(__dirname, './application')))
 //静态服务器资源
+app.use(views(path.resolve(__dirname, './application')))
 app.use(koaStatic(path.resolve(__dirname, './application')))
 
 app.use(async (ctx, next) => {
@@ -42,11 +38,51 @@ app.use(async (ctx, next) => {
 
 router.get('/hello/:name', async (ctx, next) => {
   await ctx.render('bb')
+}).post('/open', async (ctx, next) => {
+  ctx.body = {
+    title: 'koa2 json'
+  }
 })
 
 router.get('/', async (ctx, next) => {
+  // ***************************************************************
+  var data = {  
+    signature: 123, 
+    echostr: 'Abcd1234', 
+    timestamp: new Date().getTime()
+  };//这是需要提交的数据  
+  var content = qs.stringify(data);  
+  var options = {  
+    hostname: 'asiaxxli.free.ngrok.cc', 
+    path: '/my/open?' + content,  
+    method: 'POST',
+    headers: {  
+      'Content-Type': 'application/json; charset=UTF-8'  
+    }   
+  };  
+
+  function requestMothed (options) {
+    var req = http.request(options, function (res) {  
+      console.log('STATUS: ' + res.statusCode);  
+      console.log('HEADERS: ' + JSON.stringify(res.headers));  
+      res.setEncoding('utf8');  
+      var callback = (chunk) => chunk;
+      res.on('data', function (chunk) {  
+        console.log('BODY: ' + chunk)
+      });  
+    });  
+  
+    req.on('error', function (e) {  
+      console.log('problem with request: ' + e.message);  
+    });  
+  
+    req.end(); 
+  }
+  requestMothed(options)
+  //************************************************************ */
   await ctx.render('aa')
 })
+
 
 router.get('/author', async (ctx, next) => {
   var signature = ctx.query.signature
