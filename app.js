@@ -103,7 +103,7 @@ router.get('/author', async (ctx, next) => {
   if(code === signature){
     ctx.body = echostr
   }else{
-    ctx.body = "error"
+    ctx.body = "success"
   }
   // console.log(code)
   logger.error(code)
