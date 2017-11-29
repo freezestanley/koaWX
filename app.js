@@ -69,7 +69,8 @@ router.get('/author', async (ctx, next) => {
   }else{
     ctx.body = "error"
   }
-  console.log(code)
+  // console.log(code)
+  logger.error(code)
   // await ctx.render('aa')
 })
 
