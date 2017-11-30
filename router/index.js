@@ -56,9 +56,11 @@ router.get('/menu', async (ctx, next) => {
   }
   httpRequest(option).then(result=> {
     console.log('post=' + result);
+    logger.error(result)
   }).catch(err=> {
       console.log(err);
   })
+
   ctx.body = "success"
 })
 
