@@ -42,8 +42,7 @@ router.get('/author', async (ctx, next) => {
   // await ctx.render('aa')
 })
 
-router.get('/menu', async (ctx, next) => {
-  var tokenurl = 'https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=' + config.appid + '&secret=' + config.appsecret
+let getToken = async () => {
   var option = {
     hostname: 'api.weixin.qq.com', 
     path: '/cgi-bin/token',
@@ -54,12 +53,57 @@ router.get('/menu', async (ctx, next) => {
       secret: config.appsecret
     }
   }
-  httpRequest(option).then(result=> {
-    console.log('post=' + result);
-    logger.error(result)
-  }).catch(err=> {
-      console.log(err);
-  })
+  return await httpRequest(option)
+}
+
+router.get('/menu/:key', async (ctx, next) => {
+  let token = await getToken()
+  if (ctx.params.key == 'create') {
+    var option = {
+      hostname: 'api.weixin.qq.com', 
+      path: `/cgi-bin/menu/create?access_token=${token}`,
+      methods: 'POST',
+      data:  {
+        "button":[
+          {    
+             "type":"click",
+             "name":"今日歌曲",
+             "key":"V1001_TODAY_MUSIC"
+          },
+          {
+              "name":"菜单",
+              "sub_button":[
+              {    
+                  "type":"view",
+                  "name":"搜索",
+                  "url":"http://www.soso.com/"
+               },
+               {
+                    "type":"miniprogram",
+                    "name":"wxa",
+                    "url":"http://mp.weixin.qq.com",
+                    "appid":"wx286b93c14bbf93aa",
+                    "pagepath":"pages/lunar/index"
+                },
+               {
+                  "type":"click",
+                  "name":"赞一下我们",
+                  "key":"V1001_GOOD"
+               }]
+          }
+        ]
+      }
+    }
+    httpRequest(option).then(result=> {
+      console.log('post=' + result);
+      logger.error(result)
+    }).catch(err=> {
+        console.log(err);
+    })
+  } else {
+
+  }
+  
 
   ctx.body = "success"
 })
