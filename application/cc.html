@@ -1,0 +1,77 @@
+<html>
+  <head>
+  </head>
+  <body>
+    this is cc
+    <script>
+        // const value = {a:1, b:2}
+        // const handler = {
+        //   get (obj, prop) {
+        //     const value = obj[prop];
+        //     console.log(`GET ${prop} = ${value}`)
+        //     return value 
+        //   }
+        // }
+        // const proxy = new Proxy(value, handler)
+        // console.log(proxy.a)
+        // console.log(proxy.c)
+
+        // let validator = {
+        //   set: function(obj, prop, value) {
+        //     if (prop === 'age') {
+        //       if (!Number.isInteger(value)) {
+        //         throw new TypeError('The age is not an integer')
+        //       }
+        //       if (value > 200) {
+        //         throw new RangeError('The age seems invalid')
+        //       }
+        //     }
+        //     obj[prop] = value
+        //   }
+        // }
+        // let person = new Proxy({}, validator)
+        // person.age = 100
+        // console.log(person.age)
+        // person.age = 'young'
+        // person.age = 300
+
+
+function extend(sup,base) {
+  var descriptor = Object.getOwnPropertyDescriptor(
+    base.prototype,"constructor"
+  );
+  base.prototype = Object.create(sup.prototype);
+  var handler = {
+    construct: function(target, args) {
+      var obj = Object.create(base.prototype);
+      this.apply(target,obj,args);
+      return obj;
+    },
+    apply: function(target, that, args) {
+      sup.apply(that,args);
+      base.apply(that,args);
+    }
+  };
+  var proxy = new Proxy(base,handler);
+  descriptor.value = proxy;
+  Object.defineProperty(base.prototype, "constructor", descriptor);
+  return proxy;
+}
+
+var Person = function(name){
+  this.name = name
+};
+
+var Boy = extend(Person, function(name, age) {
+  this.age = age;
+});
+
+Boy.prototype.sex = "M";
+
+var Peter = new Boy("Peter", 13);
+console.log(Peter.sex);  // "M"
+console.log(Peter.name); // "Peter"
+console.log(Peter.age);  // 13
+    </script>
+  </body>
+</html>

@@ -1,6 +1,6 @@
 'use strict'
 const qs = require('querystring')
-const http = require('http')
+const http = require('https')
   // var option = {
   //   hostname: 'asiaxxli.free.ngrok.cc', 
   //   path: '/my/open',
@@ -33,7 +33,7 @@ const http = require('http')
   // })
 module.exports = async function (opt) {
   var options = {  
-    hostname: opt.hostname || 'asiaxxli.free.ngrok.cc', 
+    hostname: opt.hostname || '443376f4.ngrok.io', 
     path: opt.path + '?' + qs.stringify(opt.data), // /my/open?' 
     method: opt.method || 'POST',
     headers: {  
@@ -43,13 +43,13 @@ module.exports = async function (opt) {
   function test () {
     return new Promise((resolve,reject) => {
       var req = http.request(options, function (res) {  
-        console.log('STATUS: ' + res.statusCode);  
-        console.log('HEADERS: ' + JSON.stringify(res.headers));  
+        // console.log('STATUS: ' + res.statusCode);  
+        // console.log('HEADERS: ' + JSON.stringify(res.headers));  
         res.setEncoding('utf8');  
         var callback = (chunk) => chunk;
         res.on('data', function (chunk) {
           resolve(chunk)  
-          console.log('BODY: ' + chunk)
+          // console.log('BODY: ' + chunk)
         });  
       });  
       req.on('error', function (e) {  

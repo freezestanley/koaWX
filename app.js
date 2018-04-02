@@ -11,11 +11,23 @@ const logger = require('./log')
 const config = require('./config')
 const httpRequest = require('./utills')
 const router = require('./router')
+const xmlParser = require('koa-xml-parser')
+
+const parseXML = xmlParser({
+  limit: '1MB',           // Reject payloads larger than 1 MB
+  encoding: 'UTF-8',      // Explicitly set UTF-8 encoding
+  xml: {
+    normalize: true,      // Trim whitespace inside text nodes
+    normalizeTags: true,  // Transform tags to lowercase
+    explicitArray: false  // Only put nodes in array if >1
+  }
+});
+app.use(parseXML)
 
 onerror(app)
 app.use(json())
 app.use(bodyParser({
-  enableTypes:['json', 'form', 'text']
+  enableTypes:['json', 'form', 'text','xml']
 }))
 
 logger.warn('starting')
